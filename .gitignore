@@ -190,3 +190,4 @@ tags
 # End of https://www.toptal.com/developers/gitignore/api/git,node,macos,visualstudiocode,vim
 
 !dist
+gactions
