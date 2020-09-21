@@ -1,15 +1,17 @@
 const core = require('@actions/core');
+const { exec } = require('@actions/exec')
 const github = require('@actions/github');
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-} catch (error) {
-  core.setFailed(error.message);
-}
+;(async () => {
+  try {
+    await exec("curl --version")
+    await exec("curl https://dl.google.com/gactions/v3/release/gactions-sdk_linux.tar.gz --output gactions.tar.gz")
+    await exec("tar xvf gactions.tar.gz")
+    await exec("mv aog_cli/gactions .")
+    await exec("rmdir aog_cli")
+    await exec("rm gactions.tar.gz")
+    core.exportVariable("PATH", `${process.env["PATH"]}:${process.cwd()}`)
+  } catch (error) {
+    core.setFailed(error.message);
+  }  
+})()
